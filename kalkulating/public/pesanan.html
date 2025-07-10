@@ -120,7 +120,7 @@
 
   <script>
     function tampilkanPesanan() {
-      const data = JSON.parse(localStorage.getItem('produk') || '[]'); // ganti dari 'riwayatPesanan' ke 'produk'
+      const data = JSON.parse(localStorage.getItem('produk') || '[]');
       const container = document.getElementById('dataPesanan');
       const totalAll = document.getElementById('totalAll');
       container.innerHTML = "";
