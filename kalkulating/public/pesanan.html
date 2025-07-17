@@ -1,176 +1,97 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Riwayat Pesanan</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f4f7f9;
-      margin: 0;
-      padding: 0;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 30px auto;
-      padding: 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    }
-
-    h2 {
-      color: #2c3e50;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    #btn-download {
-      background-color: #2ecc71;
-      color: white;
-      padding: 10px 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-bottom: 20px;
-      transition: background-color 0.3s;
-    }
-
-    #btn-download:hover {
-      background-color: #27ae60;
-    }
-
-    .pesanan-box {
-      border-left: 5px solid #2980b9;
-      padding: 15px;
-      border-radius: 8px;
-      margin-bottom: 25px;
-      background: #ffffff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-      transition: transform 0.2s;
-    }
-
-    .pesanan-box:hover {
-      transform: scale(1.02);
-    }
-
-    .pesanan-box h3 {
-      margin-top: 0;
-      color: #2980b9;
-      font-size: 18px;
-    }
-
-    .pesanan-box table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    .pesanan-box th, .pesanan-box td {
-      border: 1px solid #ddd;
-      padding: 8px 10px;
-      text-align: left;
-    }
-
-    .pesanan-box th {
-      background-color: #ecf0f1;
-    }
-
-    .total-semua {
-      font-weight: bold;
-      text-align: right;
-      margin-top: 20px;
-      font-size: 16px;
-    }
-
-    @media (max-width: 600px) {
-      .pesanan-box table, .pesanan-box thead, .pesanan-box tbody, .pesanan-box th, .pesanan-box td, .pesanan-box tr {
-        display: block;
-        width: 100%;
-      }
-
-      .pesanan-box td {
-        padding: 10px;
-        border: none;
-        position: relative;
-        padding-left: 50%;
-      }
-
-      .pesanan-box td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 10px;
-        font-weight: bold;
-        color: #7f8c8d;
-      }
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Detail Pesanan</title>
+  <link rel="stylesheet" href="css/pesanan.css">
 </head>
 <body>
-  <div class="container">
-    <h2>Riwayat Pesanan</h2>
-    <button id="btn-download">⬇ Download PDF</button>
-    <div id="dataPesanan"></div>
-    <div id="totalAll" class="total-semua"></div>
+  <div class="container" id="printArea">
+    <h2>Detail Pesanan</h2>
+
+    <div class="data-section" id="dataPemesan">
+      <!-- Data pemesan akan muncul di sini -->
+    </div>
+
+    <h3 style="margin-top: 30px;">Barang yang Dipesan</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Nama Produk</th>
+          <th>Jumlah</th>
+          <th>Harga</th>
+          <th>Total Harga</th>
+        </tr>
+      </thead>
+      <tbody id="tabelBarang">
+        <!-- Barang akan diisi dari JS -->
+      </tbody>
+      <tfoot>
+        <tr class="subtotal-row">
+          <td colspan="3">Subtotal</td>
+          <td id="subtotalCell">Rp 0</td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <a class="back-btn" href="lihat_barang.html">← Kembali</a>
+    <a href="#" class="pdf-btn" onclick="downloadPDF()">Download PDF</a>
   </div>
 
+  <!-- jsPDF CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
   <script>
-    function tampilkanPesanan() {
-      const data = JSON.parse(localStorage.getItem('produk') || '[]');
-      const container = document.getElementById('dataPesanan');
-      const totalAll = document.getElementById('totalAll');
-      container.innerHTML = "";
-      let grandTotal = 0;
+    const data = JSON.parse(localStorage.getItem("dataPemesanan"));
 
-      if (data.length === 0) {
-        container.innerHTML = "<p style='text-align:center; color: gray;'>🗒️ Tidak ada pesanan.</p>";
-        totalAll.innerHTML = "";
-        return;
-      }
+    if (data) {
+      const divPemesan = document.getElementById("dataPemesan");
+      divPemesan.innerHTML = `
+        <div class="data-row"><span class="data-label">Nama Pemesan</span><span class="data-value">${data.nama}</span></div>
+        <div class="data-row"><span class="data-label">Tanggal Pesan</span><span class="data-value">${data.tanggalPesan}</span></div>
+        <div class="data-row"><span class="data-label">Tanggal Selesai</span><span class="data-value">${data.tanggalSelesai}</span></div>
+        <div class="data-row"><span class="data-label">Alamat</span><span class="data-value">${data.alamat}</span></div>
+        <div class="data-row"><span class="data-label">Koordinat</span><span class="data-value">${data.koordinat.lat}, ${data.koordinat.lng}</span></div>
+      `;
 
-      data.forEach((pesanan, index) => {
-        const div = document.createElement('div');
-        div.className = 'pesanan-box';
+      const tbody = document.getElementById("tabelBarang");
+      let subtotal = 0;
 
-        let html = `<h3>📦 Pesanan ke-${index + 1} | <small>${pesanan.waktu}</small></h3>`;
-        html += `<table><thead><tr>
-          <th>Nama Barang</th><th>Jumlah</th><th>Harga</th><th>Total</th>
-        </tr></thead><tbody>`;
+      data.barang.forEach(item => {
+        const jumlah = item.jumlah || 1;
+        const harga = parseInt(item.harga);
+        const total = harga * jumlah;
+        subtotal += total;
 
-        pesanan.items.forEach(item => {
-          html += `<tr>
-            <td data-label="Nama">${item.namabarang}</td>
-            <td data-label="Jumlah">${item.jumlah}</td>
-            <td data-label="Harga">Rp ${item.harga.toLocaleString('id-ID')}</td>
-            <td data-label="Total">Rp ${item.total.toLocaleString('id-ID')}</td>
-          </tr>`;
-          grandTotal += item.total;
-        });
-
-        html += `</tbody></table>`;
-        div.innerHTML = html;
-        container.appendChild(div);
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${item.namaProduk || item.nama}</td>
+          <td>${jumlah}</td>
+          <td>Rp ${harga.toLocaleString()}</td>
+          <td>Rp ${total.toLocaleString()}</td>
+        `;
+        tbody.appendChild(row);
       });
 
-      totalAll.innerHTML = `Total Semua Pesanan: <strong>Rp ${grandTotal.toLocaleString('id-ID')}</strong>`;
+      document.getElementById("subtotalCell").textContent = `Rp ${subtotal.toLocaleString()}`;
+    } else {
+      document.body.innerHTML = "<h3 style='text-align:center;'>Data pesanan tidak ditemukan.</h3>";
     }
 
-    document.getElementById('btn-download').addEventListener('click', () => {
-      const element = document.getElementById('dataPesanan');
-      html2pdf().set({
-        margin: 10,
-        filename: 'riwayat-pesanan.pdf',
-        image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
-        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      }).from(element).save();
-    });
+    function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
 
-    tampilkanPesanan();
+      doc.html(document.getElementById("printArea"), {
+        callback: function (doc) {
+          doc.save("detail-pesanan.pdf");
+        },
+        x: 10,
+        y: 10,
+        width: 180
+      });
+    }
   </script>
 </body>
 </html>

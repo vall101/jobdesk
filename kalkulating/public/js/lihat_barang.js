@@ -46,9 +46,10 @@ function kirimPemesanan() {
     data.barang.push({ namaProduk, jumlah, harga, total });
   });
 
-  console.log(data);
-  alert('Data siap dikirim. Lihat console untuk detail.');
+  localStorage.setItem('dataPemesanan', JSON.stringify(data));
+  window.location.href = 'pesanan.html';
 }
+
 
 // Load dari localStorage
 const dummyBarang = JSON.parse(localStorage.getItem('barangTerpilih') || '[]');
