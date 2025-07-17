@@ -51,7 +51,6 @@ function kirimPemesanan() {
 }
 
 
-// Load dari localStorage
 const dummyBarang = JSON.parse(localStorage.getItem('barangTerpilih') || '[]');
 const tbody = document.getElementById('tbody-barang');
 dummyBarang.forEach(item => {
