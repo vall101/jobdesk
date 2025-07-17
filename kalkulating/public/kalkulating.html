@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-<<<<<<< HEAD
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Kalkulasi Barang</title>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
@@ -101,90 +100,10 @@
     <div>
       <strong>Jumlah Jenis Barang:</strong> <span id="jumlahJenis">0</span><br>
       <strong>Subtotal:</strong> Rp <span id="subtotalHarga">0</span>
-=======
-  <title>Tabel Barang Stylish</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-</head>
-<body>
-<div class="container">
-  <h2>Filter Kategori</h2>
-  <div style="display: flex; gap: 10px; margin-bottom: 20px;">
-    <input type="text" id="pencarianBarang" placeholder="Cari nama barang..." style="flex: 8; padding: 10px; height: 13px; border-radius: 5px; border: 1px solid #2980b9;">
-    <select id="filterKategori" style="flex: 2; padding: 10px; height: 42px; border-radius: 5px; border: 1px solid #2980b9;">
-      <option value="semua">Tampilkan Semua</option>
-    </select>
-  </div>
-
-  <h2>Daftar Barang</h2>
-  <table id="tabelBarang">
-    <thead>
-      <tr>
-        <th>Gambar</th>
-        <th>Nama Barang</th>
-        <th>Jumlah</th>
-        <th>Harga (Rp)</th>
-      </tr>
-    </thead>
-    <tbody id="bodyBarang"></tbody>
-  </table>
-
-  <h2>Barang yang Dipilih</h2>
-  <table id="tabelPilihan">
-    <thead>
-      <tr>
-        <th>Pilih</th>
-        <th>Gambar</th>
-        <th>Nama Barang</th>
-        <th>Jumlah</th>
-        <th>Harga (Rp)</th>
-        <th>Total Harga (Rp)</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-    <tfoot>
-      <tr>
-        <td colspan="5">Subtotal</td>
-        <td id="subtotal">0</td>
-      </tr>
-    </tfoot>
-  </table>
-
-  <button onclick="hapusTerpilih()">Hapus Yang Dipilih</button>
-  <button onclick="showFormPopup()">Pesan</button>
-</div>
-
-<!-- Gambar Popup -->
-<div id="popup" onclick="closePopup(event)" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color:rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:9999;">
-  <div class="popup-content" id="popupContent">
-    <img id="popupImage" src="" alt="Popup Image" style="max-width:90vw; max-height:90vh; border-radius:8px;">
-  </div>
-</div>
-
-<!-- Form Pemesanan -->
-<div id="formPopup" style="display:none; position:fixed; z-index:9999; left:0; top:0; right:0; bottom:0; background-color:rgba(0,0,0,0.5); justify-content:center; align-items:center; padding:20px;">
-  <div class="form-content" style="background:#fff; padding:20px; border-radius:12px; width:100%; max-width:600px; max-height:90vh; overflow-y:auto;">
-    <h3 style="text-align:center;">Form Pemesanan</h3>
-    <input type="text" id="namaPemesan" placeholder="Nama Lengkap" required>
-    <input type="date" id="tanggalPesan" required>
-    <input type="date" id="waktuSelesai" required>
-    <textarea id="alamatPemesan" placeholder="Alamat lengkap..." rows="3" required></textarea>
-
-    <label for="lokasiTitik">Tentukan Lokasi Anda:</label>
-    <div id="map" style="height:250px; border-radius:8px; margin:10px 0;"></div>
-    <input type="text" id="lokasiTitik" placeholder="Klik pada peta untuk memilih titik" readonly>
-
-    <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;">
-      <button onclick="submitForm()" style="background-color:#27ae60; color:white; padding:10px; border:none; border-radius:6px;">Konfirmasi Pesanan</button>
-      <button onclick="closeFormPopup()" style="background-color:#e74c3c; color:white; padding:10px; border:none; border-radius:6px;">Batal</button>
->>>>>>> 939d1cad2a636ca2ff39b082e1a1654ea16d4a3b
     </div>
     <button onclick="window.location.href='lihat_barang.html'">Lihat Barang Dipesan</button>
   </footer>
 
-<<<<<<< HEAD
   <script>
     const firebaseConfig = {
        apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
@@ -218,33 +137,12 @@
           kategori: data.kategori || "Lainnya",
           harga: data.gudangList?.[0]?.harga || 0,
           gambar: data.imageUrl?.[0] || "https://via.placeholder.com/150"
-=======
-<!-- Firebase & Script JS -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="script.js"></script>
-
-<script>
-  let map, marker;
-  function showFormPopup() {
-    document.getElementById("formPopup").style.display = "flex";
-    setTimeout(() => {
-      if (!map) {
-        map = L.map('map').setView([-6.2, 106.8], 12);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        map.on('click', function(e) {
-          const { lat, lng } = e.latlng;
-          if (marker) marker.setLatLng(e.latlng);
-          else marker = L.marker(e.latlng).addTo(map);
-          document.getElementById("lokasiTitik").value = `${lat.toFixed(5)}, ${lng.toFixed(5)}`;
->>>>>>> 939d1cad2a636ca2ff39b082e1a1654ea16d4a3b
         });
       });
       tampilkanKategori();
       filterDanTampilkanProduk();
     });
 
-<<<<<<< HEAD
     function tampilkanKategori() {
       const kategoriUnik = ["Semua", ...new Set(semuaProduk.map(p => p.kategori))];
       kategoriList.innerHTML = "";
@@ -307,74 +205,5 @@
 
     searchInput.addEventListener("input", filterDanTampilkanProduk);
   </script>
-=======
-  function closeFormPopup() {
-    document.getElementById("formPopup").style.display = "none";
-  }
-
-  function submitForm() {
-    const nama = document.getElementById("namaPemesan").value;
-    const tgl = document.getElementById("tanggalPesan").value;
-    const selesai = document.getElementById("waktuSelesai").value;
-    const alamat = document.getElementById("alamatPemesan").value;
-    const lokasi = document.getElementById("lokasiTitik").value;
-    if (!nama || !tgl || !selesai || !alamat || !lokasi) {
-      alert("Harap lengkapi semua kolom!");
-      return;
-    }
-    kirimPesanan(); // Panggil fungsi dari script.js
-    closeFormPopup();
-  }
-
-  // Gambar Popup Logic
-  const popup = document.getElementById("popup");
-  const popupImage = document.getElementById("popupImage");
-  let currentImages = [], currentImageIndex = 0;
-
-  function openPopup(id) {
-    const item = barangList.find(b => b.id === id);
-    if (!item) return;
-    currentImages = item.imageUrl || [];
-    currentImageIndex = 0;
-    showCurrentImage();
-    popup.style.display = "flex";
-  }
-
-  function showCurrentImage() {
-    const rawUrl = currentImages.length > 0 ? currentImages[currentImageIndex] : "";
-    const cleanUrl = rawUrl.replace(/^"|"$/g, '');
-    popupImage.src = cleanUrl || "https://via.placeholder.com/400x300?text=No+Image";
-  }
-
-  function closePopup(e) {
-    if (e.target.id === "popup") popup.style.display = "none";
-  }
-
-  // Swipe gesture
-  let startX = 0;
-  popupImage.addEventListener('touchstart', e => startX = e.touches[0].clientX);
-  popupImage.addEventListener('touchend', e => {
-    const endX = e.changedTouches[0].clientX;
-    const diffX = endX - startX;
-    if (diffX > 50) currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
-    else if (diffX < -50) currentImageIndex = (currentImageIndex + 1) % currentImages.length;
-    showCurrentImage();
-  });
-
-  document.addEventListener('keydown', e => {
-    if (popup.style.display === "flex") {
-      if (e.key === 'ArrowLeft') {
-        currentImageIndex = (currentImageIndex - 1 + currentImages.length) % currentImages.length;
-        showCurrentImage();
-      } else if (e.key === 'ArrowRight') {
-        currentImageIndex = (currentImageIndex + 1) % currentImages.length;
-        showCurrentImage();
-      } else if (e.key === 'Escape') {
-        popup.style.display = "none";
-      }
-    }
-  });
-</script>
->>>>>>> 939d1cad2a636ca2ff39b082e1a1654ea16d4a3b
 </body>
 </html>
