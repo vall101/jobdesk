@@ -1,3 +1,16 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
+  authDomain: "official-jobdesk.firebaseapp.com",
+  projectId: "official-jobdesk",
+  storageBucket: "official-jobdesk.appspot.com",
+  messagingSenderId: "331986467875",
+  appId: "1:331986467875:web:4ed292e7ad4dd8c0f44596",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
 let koordinat = { lat: -7.424278, lng: 109.239639 };
 const gudangLatLng = { lat: -7.426870, lng: 109.247394 };
 let map = L.map('map').setView([koordinat.lat, koordinat.lng], 15);
@@ -61,7 +74,6 @@ function hapusChecklist() {
     }
   });
 }
-
 function kirimPemesanan() {
   const nama = document.getElementById('nama').value.trim();
   const tanggalPesan = document.getElementById('tanggalPesan').value;
@@ -79,10 +91,12 @@ function kirimPemesanan() {
     tanggalPesan,
     tanggalSelesai,
     alamat,
-    koordinat,
     jarak,
     barang: []
   };
+
+  // ✅ Konversi koordinat ke GeoPoint
+  data.koordinat = new firebase.firestore.GeoPoint(koordinat.lat, koordinat.lng);
 
   const rows = document.querySelectorAll('#tbody-barang tr');
   rows.forEach(row => {
@@ -106,6 +120,7 @@ function kirimPemesanan() {
       alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
     });
 }
+
 
 
 function updateTotal(input) {
