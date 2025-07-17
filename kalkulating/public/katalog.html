@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kalkulasi Barang</title>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/katalog.css" />
+</head>
+<body>
+  <header>
+    <input type="text" id="searchInput" placeholder="Cari nama barang...">
+    <div id="kategoriList"></div>
+  </header>
+
+  <main>
+    <h1>Daftar Barang</h1>
+    <div id="produkGrid"></div>
+  </main>
+
+  <footer>
+    <div>
+      <strong>Jumlah Jenis Barang:</strong> <span id="jumlahJenis">0</span><br>
+      <strong>Subtotal:</strong> Rp <span id="subtotalHarga">0</span>
+    </div>
+    <button onclick="window.location.href='lihat_barang.html'">Lihat Barang Dipesan</button>
+  </footer>
+
+  <div id="popupDeskripsi">
+    <h3 id="popupNama"></h3>
+    <div id="popupGambarContainer">
+      <button id="popupPrevBtn" class="popup-nav">&#10094;</button>
+      <div class="popup-gambar-wrapper" id="popupGambarWrapper"></div>
+      <button id="popupNextBtn" class="popup-nav">&#10095;</button>
+    </div>
+    <p id="popupDeskripsiText"></p>
+    <button onclick="document.getElementById('popupDeskripsi').style.display='none'">Tutup</button>
+  </div>
+
+  <!-- JS -->
+  <script src="js/katalog.js"></script>
+</body>
+</html>
