@@ -1,14 +1,15 @@
 {
   "hosting": {
-    "public": "public", 
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
       "**/node_modules/**"
     ],
     "rewrites": [
+      { "source": "/", "destination": "/register.html" },
       { "source": "/register", "destination": "/register.html" },
-      { "source": "/kalkulating", "destination": "/kalkulating.html" },
+      { "source": "/katalog", "destination": "/katalog.html" },
       { "source": "/pesanan", "destination": "/pesanan.html" }
     ]
   }

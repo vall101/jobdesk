@@ -102,6 +102,37 @@ function tambahKePesanan(id, nama, harga) {
   updateRingkasan();
   localStorage.setItem("barangTerpilih", JSON.stringify(produkDipilih));
 }
+function simpanPesanan() {
+  if (produkDipilih.length === 0) {
+    alert("Tidak ada barang yang dipilih!");
+    return;
+  }
+
+  const pesananData = {
+    tanggal: new Date().toISOString(),
+    produk: produkDipilih.map(p => ({
+      id: p.id,
+      nama: p.nama,
+      harga: p.harga,
+      jumlah: p.jumlah,
+      gambar: p.gambar
+    })),
+    totalHarga: produkDipilih.reduce((sum, p) => sum + p.harga * p.jumlah, 0)
+  };
+
+  db.collection("pesanan")
+    .add(pesananData)
+    .then(docRef => {
+      console.log("Pesanan disimpan dengan ID:", docRef.id);
+      alert("Pesanan berhasil disimpan ke Firestore!");
+      localStorage.removeItem("barangTerpilih");
+      window.location.href = 'lihat_barang.html';
+    })
+    .catch(error => {
+      console.error("Gagal simpan pesanan:", error);
+      alert("Terjadi kesalahan saat menyimpan pesanan.");
+    });
+}
 
 function updateRingkasan() {
   jumlahJenisEl.textContent = produkDipilih.length;

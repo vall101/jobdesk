@@ -1,3 +1,16 @@
+const firebaseConfig = {
+  apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
+  authDomain: "official-jobdesk.firebaseapp.com",
+  projectId: "official-jobdesk",
+  storageBucket: "official-jobdesk.appspot.com",
+  messagingSenderId: "331986467875",
+  appId: "1:331986467875:web:4ed292e7ad4dd8c0f44596",
+};
+
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+
 let koordinat = { lat: -7.424278, lng: 109.239639 };
 const map = L.map('map').setView([koordinat.lat, koordinat.lng], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -21,12 +34,16 @@ function hapusChecklist() {
     }
   });
 }
-
 function kirimPemesanan() {
-  const nama = document.getElementById('nama').value;
+  const nama = document.getElementById('nama').value.trim();
   const tanggalPesan = document.getElementById('tanggalPesan').value;
   const tanggalSelesai = document.getElementById('tanggalSelesai').value;
-  const alamat = document.getElementById('alamat').value;
+  const alamat = document.getElementById('alamat').value.trim();
+
+  if (!nama || !tanggalPesan || !tanggalSelesai || !alamat) {
+    alert("Mohon lengkapi semua data pemesanan.");
+    return;
+  }
 
   const data = {
     nama,
@@ -34,7 +51,8 @@ function kirimPemesanan() {
     tanggalSelesai,
     alamat,
     koordinat,
-    barang: []
+    barang: [],
+    waktuSubmit: new Date()
   };
 
   const rows = document.querySelectorAll('#tbody-barang tr');
@@ -43,11 +61,21 @@ function kirimPemesanan() {
     const namaProduk = row.cells[2].textContent;
     const harga = parseInt(row.cells[4].textContent);
     const total = parseInt(jumlah) * harga;
-    data.barang.push({ namaProduk, jumlah, harga, total });
+    data.barang.push({ namaProduk, jumlah: parseInt(jumlah), harga, total });
   });
 
-  localStorage.setItem('dataPemesanan', JSON.stringify(data));
-  window.location.href = 'pesanan.html';
+  // Simpan ke Firestore
+  db.collection("pemesanan").add(data)
+    .then(() => {
+      alert("Pemesanan berhasil disimpan ke database!");
+      // Bersihkan localStorage jika perlu
+      localStorage.removeItem("barangTerpilih");
+      window.location.href = 'pesanan.html';
+    })
+    .catch((error) => {
+      console.error("Gagal menyimpan data:", error);
+      alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
+    });
 }
 
 
