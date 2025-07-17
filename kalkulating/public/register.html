@@ -62,7 +62,6 @@
 <body>
 
 <div class="form-container">
-  <!-- FORM 1: Minta Token -->
   <div id="form-minta-token">
     <h2>Registrasi Pengguna</h2>
     <input type="text" id="nama" placeholder="Nama Lengkap" required>
@@ -71,7 +70,6 @@
     <div class="message" id="message-request"></div>
   </div>
 
-  <!-- FORM 2: Verifikasi OTP -->
   <div id="form-verifikasi" class="hidden">
     <h2>Masukkan Kode Verifikasi</h2>
     <p>Kode telah dikirim ke WhatsApp Anda.</p>
@@ -80,13 +78,10 @@
     <div class="message" id="message-verify"></div>
   </div>
 </div>
-
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
 
 <script>
-  // Konfigurasi Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
     authDomain: "official-jobdesk.firebaseapp.com",
@@ -100,7 +95,6 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  // Global state
   let namaPengguna = "";
   let nomorPengguna = "";
   const tokenTerkirim = "123456";
@@ -128,7 +122,6 @@
     namaPengguna = nama;
     nomorPengguna = phone;
 
-    // Simpan permintaan token ke Firestore
     db.collection("token_request").add({
       nama: nama,
       telepon: phone,
@@ -138,7 +131,6 @@
       msg.textContent = `Token dikirim ke WA Anda (dummy: ${tokenTerkirim})`;
       msg.style.color = "green";
 
-      // Tampilkan form verifikasi
       setTimeout(() => {
         document.getElementById("form-minta-token").classList.add("hidden");
         document.getElementById("form-verifikasi").classList.remove("hidden");

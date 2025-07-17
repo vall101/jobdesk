@@ -1,45 +1,67 @@
 body {
   font-family: Arial, sans-serif;
   margin: 20px;
+  background-color: #fdfdfd;
+  color: #333;
 }
+
+h2, h3 {
+  color: #2c3e50;
+}
+
+.form-container {
+  margin-bottom: 20px;
+}
+
+.form-container input {
+  display: block;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 100%;
+  max-width: 400px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+#map {
+  height: 300px;
+  margin-bottom: 20px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 10px;
 }
+
 th, td {
   border: 1px solid #ccc;
-  padding: 8px;
+  padding: 10px;
   text-align: center;
   vertical-align: middle;
 }
+
 th {
-  background-color: #f0f0f0;
+  background-color: #ecf0f1;
 }
+
 img {
   max-width: 60px;
   max-height: 60px;
 }
+
 input[type="number"] {
   width: 60px;
+  padding: 5px;
 }
-.form-container {
-  margin-bottom: 20px;
-}
-.form-container input,
-.form-container textarea {
-  display: block;
-  margin-bottom: 10px;
-  padding: 8px;
-  width: 100%;
-  box-sizing: border-box;
-}
-#map {
-  height: 300px;
-  margin-top: 10px;
-}
+
 .button-group {
   margin-top: 20px;
 }
+
 .button-group button {
   padding: 10px 20px;
   margin-right: 10px;
@@ -48,6 +70,65 @@ input[type="number"] {
   color: white;
   cursor: pointer;
 }
-.delete-btn { background-color: #e74c3c; }
-.back-btn { background-color: #7f8c8d; }
-.submit-btn { background-color: #2ecc71; }
+
+.delete-btn {
+  background-color: #e74c3c;
+}
+
+.back-btn {
+  background-color: #7f8c8d;
+}
+
+.submit-btn {
+  background-color: #2ecc71;
+}
+
+@media screen and (max-width: 768px) {
+  #tabel-barang {
+    overflow-x: auto;
+    display: block;
+    white-space: nowrap;
+  }
+
+  #tbody-barang tr {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #fff;
+  }
+
+  #tbody-barang td {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border: none;
+  }
+
+  #tbody-barang td img {
+    max-width: 100px;
+    margin: auto;
+  }
+
+  thead {
+    display: none;
+  }
+
+  input[type="number"] {
+    width: 100%;
+    max-width: 100px;
+  }
+
+  .button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .button-group button {
+    flex: 1 1 auto;
+    margin-right: 0;
+  }
+}

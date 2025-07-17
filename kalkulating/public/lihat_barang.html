@@ -8,13 +8,20 @@
   <link rel="stylesheet" href="css/lihat_barang.css" />
 </head>
 <body>
-  <h2>Form Pemesanan</h2>
+  <h2>Data Pemesan</h2>
   <div class="form-container">
-    <input type="text" id="nama" placeholder="Nama Pemesan" required />
-    <input type="date" id="tanggalPesan" placeholder="Tanggal Pesan" required />
-    <input type="date" id="tanggalSelesai" placeholder="Tanggal Selesai" required />
-    <textarea id="alamat" placeholder="Alamat Pengiriman" rows="3" required></textarea>
-    <div id="map"></div>
+    <label for="alamat"><strong>Nama Pemesan:</strong></label>
+    <input type="text" id="nama" placeholder="Nama lengkap" />
+    <label for="alamat"><strong>Tanggal Pesan</strong></label>
+    <input type="date" id="tanggalPesan" />
+    <label for="alamat"><strong>Tanggal Selesai</strong></label>
+    <input type="date" id="tanggalSelesai" />
+  
+  <div id="map"></div>
+  <label for="alamat"><strong>Alamat Lengkap:</strong></label>
+  <input type="text" id="alamat" readonly />
+  <label for="jarak"><strong>Jarak ke Gudang:</strong></label>
+  <input type="text" id="jarak" readonly />
   </div>
 
   <h2>Barang yang Dipilih</h2>
@@ -29,9 +36,7 @@
         <th>Total Harga</th>
       </tr>
     </thead>
-    <tbody id="tbody-barang">
-      <!-- Diisi dari JS -->
-    </tbody>
+    <tbody id="tbody-barang"></tbody>
   </table>
 
   <div class="button-group">
