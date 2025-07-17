@@ -5,60 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lihat Barang</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-    th, td {
-      border: 1px solid #ccc;
-      padding: 8px;
-      text-align: center;
-      vertical-align: middle;
-    }
-    th {
-      background-color: #f0f0f0;
-    }
-    img {
-      max-width: 60px;
-      max-height: 60px;
-    }
-    input[type="number"] {
-      width: 60px;
-    }
-    .form-container {
-      margin-bottom: 20px;
-    }
-    .form-container input, .form-container textarea {
-      display: block;
-      margin-bottom: 10px;
-      padding: 8px;
-      width: 100%;
-      box-sizing: border-box;
-    }
-    #map {
-      height: 300px;
-      margin-top: 10px;
-    }
-    .button-group {
-      margin-top: 20px;
-    }
-    .button-group button {
-      padding: 10px 20px;
-      margin-right: 10px;
-      border: none;
-      border-radius: 5px;
-      color: white;
-      cursor: pointer;
-    }
-    .delete-btn { background-color: #e74c3c; }
-    .back-btn { background-color: #7f8c8d; }
-    .submit-btn { background-color: #2ecc71; }
-  </style>
+  <link rel="stylesheet" href="lihat_barang.css" />
 </head>
 <body>
   <h2>Form Pemesanan</h2>
@@ -83,7 +30,7 @@
       </tr>
     </thead>
     <tbody id="tbody-barang">
-      <!-- Baris barang akan diisi dari JavaScript -->
+      <!-- Diisi dari JS -->
     </tbody>
   </table>
 
@@ -94,95 +41,6 @@
   </div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    // Inisialisasi koordinat awal di Purwokerto
-    let koordinat = { lat: -7.424278, lng: 109.239639 };
-    const map = L.map('map').setView([koordinat.lat, koordinat.lng], 13);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '© OpenStreetMap'
-    }).addTo(map);
-
-    let marker = L.marker([koordinat.lat, koordinat.lng]).addTo(map);
-
-    map.on('click', function (e) {
-      koordinat = e.latlng;
-      if (marker) map.removeLayer(marker);
-      marker = L.marker(e.latlng).addTo(map);
-    });
-
-    function hapusChecklist() {
-      const tbody = document.getElementById('tbody-barang');
-      const rows = Array.from(tbody.querySelectorAll('tr'));
-      rows.forEach(row => {
-        if (row.querySelector('input[type="checkbox"]').checked) {
-          row.remove();
-        }
-      });
-    }
-
-    function kirimPemesanan() {
-      const nama = document.getElementById('nama').value;
-      const tanggalPesan = document.getElementById('tanggalPesan').value;
-      const tanggalSelesai = document.getElementById('tanggalSelesai').value;
-      const alamat = document.getElementById('alamat').value;
-
-      const data = {
-        nama,
-        tanggalPesan,
-        tanggalSelesai,
-        alamat,
-        koordinat,
-        barang: []
-      };
-
-      const rows = document.querySelectorAll('#tbody-barang tr');
-      rows.forEach(row => {
-        const jumlah = row.querySelector('input[type="number"]').value;
-        const namaProduk = row.cells[2].textContent;
-        const harga = parseInt(row.cells[4].textContent);
-        const total = parseInt(jumlah) * harga;
-        data.barang.push({ namaProduk, jumlah, harga, total });
-      });
-
-      console.log(data);
-      alert('Data siap dikirim. Lihat console untuk detail.');
-    }
-
-    // Load barang dari localStorage
-    const dummyBarang = JSON.parse(localStorage.getItem('barangTerpilih') || '[]');
-    const tbody = document.getElementById('tbody-barang');
-    dummyBarang.forEach(item => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td><input type="checkbox"></td>
-        <td><img src="${item.gambar}" alt="${item.nama}" /></td>
-        <td>${item.nama}</td>
-        <td><input type="number" value="1" min="1" onchange="updateTotal(this)" /></td>
-        <td>${item.harga}</td>
-        <td class="total-harga">${item.harga}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-
-    function updateTotal(input) {
-      const row = input.closest('tr');
-      const jumlah = parseInt(input.value);
-      const harga = parseInt(row.cells[4].textContent);
-      row.querySelector('.total-harga').textContent = jumlah * harga;
-    }
-
-    // Select all checkbox
-    document.getElementById('selectAll').addEventListener('change', function () {
-      const checkboxes = document.querySelectorAll('#tbody-barang input[type="checkbox"]');
-      checkboxes.forEach(cb => cb.checked = this.checked);
-    });
-
-    // Batasi tanggal pesan agar tidak bisa memilih tanggal sebelum hari ini
-    window.onload = () => {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('tanggalPesan').setAttribute('min', today);
-      document.getElementById('tanggalSelesai').setAttribute('min', today);
-    };
-  </script>
+  <script src="lihat_barang.js"></script>
 </body>
 </html>

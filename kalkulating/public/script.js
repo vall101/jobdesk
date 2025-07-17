@@ -1,4 +1,3 @@
-// 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
   authDomain: "official-jobdesk.firebaseapp.com",
@@ -11,7 +10,6 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// 🌐 Variabel
 const barangList = [];
 const bodyBarang = document.getElementById("bodyBarang");
 const filter = document.getElementById("filterKategori");
@@ -25,11 +23,9 @@ let currentImages = [];
 let currentImageIndex = 0;
 let startX = 0;
 
-// 🔍 Event listener filter & search
 searchInput.addEventListener("input", () => renderBarang(filter.value));
 filter.addEventListener("change", () => renderBarang(filter.value));
 
-// 🧭 Ambil data dari Firestore
 db.collection("produk").get().then(snapshot => {
   const kategoriSet = new Set();
 
@@ -61,7 +57,6 @@ db.collection("produk").get().then(snapshot => {
   renderBarang("semua");
 });
 
-// 🖼️ Render tabel barang
 function renderBarang(kategori) {
   bodyBarang.innerHTML = "";
   const keyword = searchInput.value.toLowerCase();
@@ -86,7 +81,6 @@ function renderBarang(kategori) {
   applyListeners();
 }
 
-// 📸 Popup Gambar
 function openPopup(id) {
   const item = barangList.find(b => b.id == id);
   if (!item) return;
@@ -115,7 +109,6 @@ popupImage.addEventListener("touchend", e => {
   showCurrentImage();
 });
 
-// 🛒 Event Listener Jumlah Barang
 function applyListeners() {
   document.querySelectorAll('.input-jumlah').forEach(input => {
     input.addEventListener('input', handleUpdate);
@@ -159,7 +152,6 @@ function handleUpdate() {
   updateSubtotal();
 }
 
-// 💰 Subtotal
 function updateSubtotal() {
   let total = 0;
   document.querySelectorAll('.total-cell').forEach(cell => {
@@ -168,7 +160,6 @@ function updateSubtotal() {
   subtotalCell.textContent = `Rp ${total.toLocaleString('id-ID')}`;
 }
 
-// 🗑️ Hapus Terpilih
 function hapusTerpilih() {
   document.querySelectorAll('.cek-pilih:checked').forEach(cb => {
     cb.closest('tr').remove();
@@ -176,7 +167,6 @@ function hapusTerpilih() {
   updateSubtotal();
 }
 
-// 📤 Kirim Pesanan ke Firebase dan localStorage
 function kirimPesanan() {
   const rows = document.querySelectorAll('#tabelPilihan tbody tr');
   const dataPesanan = [];
