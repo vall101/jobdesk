@@ -154,7 +154,7 @@
     #popupDeskripsi {
       display: none;
       position: fixed;
-      top: 20%;
+      top: 15%;
       left: 50%;
       transform: translateX(-50%);
       background: white;
@@ -179,6 +179,43 @@
     #popupDeskripsi button:hover {
       background-color: #000;
     }
+    #popupGambarContainer {
+      display: flex;
+      overflow: hidden;
+      margin: 10px 0;
+      position: relative;
+    }
+    .popup-gambar-wrapper {
+      display: flex;
+      transition: transform 0.3s ease-in-out;
+      width: 100%;
+    }
+    .popup-gambar-wrapper img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 6px;
+      flex-shrink: 0;
+    }
+    .popup-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 22px;
+      background: rgba(0,0,0,0.4);
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      cursor: pointer;
+      z-index: 1;
+      border-radius: 4px;
+    }
+    #popupPrevBtn {
+      left: 0;
+    }
+    #popupNextBtn {
+      right: 0;
+    }
   </style>
 </head>
 <body>
@@ -200,6 +237,11 @@
 
   <div id="popupDeskripsi">
     <h3 id="popupNama"></h3>
+    <div id="popupGambarContainer">
+      <button id="popupPrevBtn" class="popup-nav">&#10094;</button>
+      <div class="popup-gambar-wrapper" id="popupGambarWrapper"></div>
+      <button id="popupNextBtn" class="popup-nav">&#10095;</button>
+    </div>
     <p id="popupDeskripsiText"></p>
     <button onclick="document.getElementById('popupDeskripsi').style.display='none'">Tutup</button>
   </div>
@@ -237,6 +279,7 @@
           kategori: data.kategori || "Lainnya",
           harga: data.gudangList?.[0]?.harga || 0,
           gambar: data.imageUrl?.[0] || "https://via.placeholder.com/150",
+          imageUrl: data.imageUrl || [],
           deskripsi: data.deskripsi || ""
         });
       });
@@ -280,15 +323,11 @@
           <p>Rp ${p.harga.toLocaleString()}</p>
           <button onclick="tambahKePesanan('${p.id}', '${p.nama}', ${p.harga})">Tambah</button>
         `;
-
         div.addEventListener("click", (e) => {
           if (!e.target.matches("button")) {
-            document.getElementById("popupNama").textContent = p.nama;
-            document.getElementById("popupDeskripsiText").textContent = p.deskripsi || "Tidak ada deskripsi.";
-            document.getElementById("popupDeskripsi").style.display = "block";
+            showPopup(p);
           }
         });
-
         produkGrid.appendChild(div);
       });
     }
@@ -314,6 +353,48 @@
     }
 
     searchInput.addEventListener("input", filterDanTampilkanProduk);
+
+    let popupSlideIndex = 0;
+    let popupGambarList = [];
+
+    function showPopup(p) {
+      document.getElementById("popupNama").textContent = p.nama;
+      document.getElementById("popupDeskripsiText").textContent = p.deskripsi || "Tidak ada deskripsi.";
+      popupGambarList = (p.imageUrl?.length ? p.imageUrl : [p.gambar]);
+      if (popupGambarList.length === 1) {
+        popupGambarList = Array(4).fill(popupGambarList[0]);
+      } else {
+        popupGambarList = popupGambarList.slice(0, 4);
+      }
+      const wrapper = document.getElementById("popupGambarWrapper");
+      wrapper.innerHTML = "";
+      popupGambarList.forEach(url => {
+        const img = document.createElement("img");
+        img.src = url;
+        wrapper.appendChild(img);
+      });
+      popupSlideIndex = 0;
+      updatePopupSlide();
+      document.getElementById("popupDeskripsi").style.display = "block";
+    }
+
+    function updatePopupSlide() {
+      const wrapper = document.getElementById("popupGambarWrapper");
+      wrapper.style.transform = `translateX(-${popupSlideIndex * 100}%)`;
+    }
+
+    document.getElementById("popupPrevBtn").onclick = () => {
+      if (popupSlideIndex > 0) {
+        popupSlideIndex--;
+        updatePopupSlide();
+      }
+    };
+    document.getElementById("popupNextBtn").onclick = () => {
+      if (popupSlideIndex < popupGambarList.length - 1) {
+        popupSlideIndex++;
+        updatePopupSlide();
+      }
+    };
   </script>
 </body>
 </html>
