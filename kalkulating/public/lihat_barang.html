@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Lihat Barang</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .form-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .form-group {
+      flex: 1;
+      min-width: 150px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    #map {
+      height: 250px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #3498db;
+      color: white;
+    }
+
+    img {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+
+    .btn-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .hapus-btn {
+      background-color: #e74c3c;
+      color: white;
+    }
+
+    .kembali-btn {
+      background-color: #7f8c8d;
+      color: white;
+      margin-right: 10px;
+    }
+
+    .pesan-btn {
+      background-color: #2ecc71;
+      color: white;
+    }
+
+    tfoot td {
+      font-weight: bold;
+      background-color: #ecf0f1;
+    }
+
+    @media (max-width: 600px) {
+      .btn-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .btn-container button {
+        margin-top: 10px;
+        width: 100%;
+      }
+
+      .form-container {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Form Pemesanan</h2>
+  <div class="form-container">
+    <div class="form-group">
+      <label>Nama Pemesan</label>
+      <input type="text" id="namaPemesan" required />
+    </div>
+    <div class="form-group">
+      <label>Tanggal Pesan</label>
+      <input type="date" id="tanggalPesan" required />
+    </div>
+    <div class="form-group">
+      <label>Tanggal Selesai</label>
+      <input type="date" id="tanggalSelesai" required />
+    </div>
+    <div class="form-group" style="flex-basis: 100%">
+      <label>Alamat</label>
+      <textarea id="alamatPemesan" rows="2" required></textarea>
+    </div>
+  </div>
+
+  <div id="map"></div>
+
+  <h2>Barang yang Dipilih</h2>
+  <table id="tabelBarang">
+    <thead>
+      <tr>
+        <th>Pilih</th>
+        <th>Gambar</th>
+        <th>Nama Barang</th>
+        <th>Jumlah</th>
+        <th>Harga (Rp)</th>
+        <th>Total Harga (Rp)</th>
+      </tr>
+    </thead>
+    <tbody id="tbodyBarangTerpilih"></tbody>
+    <tfoot>
+      <tr>
+        <td colspan="5">Subtotal</td>
+        <td id="subtotalHarga">0</td>
+      </tr>
+    </tfoot>
+  </table>
+
+  <div class="btn-container">
+    <div>
+      <button class="kembali-btn" onclick="window.location.href='kalkulating.html'">Kembali</button>
+      <button class="hapus-btn" onclick="hapusTerpilih()">Hapus yang Dipilih</button>
+    </div>
+    <button class="pesan-btn" onclick="kirimPemesanan()">Pesan</button>
+  </div>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    const barang = JSON.parse(localStorage.getItem("barangTerpilih")) || [];
+    const tbody = document.getElementById("tbodyBarangTerpilih");
+    const subtotalEl = document.getElementById("subtotalHarga");
+
+    let subtotal = 0;
+    barang.forEach((item, index) => {
+      const jumlah = item.jumlah ? parseInt(item.jumlah) : 1;
+      const harga = parseInt(item.harga);
+      const total = jumlah * harga;
+      subtotal += total;
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><input type="checkbox" class="hapus-checkbox" data-index="${index}"></td>
+        <td><img src="${item.gambar || 'https://via.placeholder.com/60'}" alt="Gambar"></td>
+        <td>${item.nama || '-'}</td>
+        <td>${jumlah}</td>
+        <td>${harga.toLocaleString("id-ID")}</td>
+        <td>${total.toLocaleString("id-ID")}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    subtotalEl.textContent = subtotal.toLocaleString("id-ID");
+
+    function hapusTerpilih() {
+      const checkboxes = document.querySelectorAll('.hapus-checkbox');
+      const dataBaru = barang.filter((_, i) => !checkboxes[i].checked);
+      localStorage.setItem("barangTerpilih", JSON.stringify(dataBaru));
+      location.reload();
+    }
+
+    function kirimPemesanan() {
+      const nama = document.getElementById("namaPemesan").value;
+      const tglPesan = document.getElementById("tanggalPesan").value;
+      const tglSelesai = document.getElementById("tanggalSelesai").value;
+      const alamat = document.getElementById("alamatPemesan").value;
+
+      if (!nama || !tglPesan || !tglSelesai || !alamat) {
+        alert("Mohon lengkapi semua data.");
+        return;
+      }
+
+      const posisi = marker.getLatLng();
+      const pemesanan = {
+        nama,
+        tglPesan,
+        tglSelesai,
+        alamat,
+        latitude: posisi.lat,
+        longitude: posisi.lng,
+        barang
+      };
+
+      console.log("Data yang dikirim:", pemesanan);
+      alert("Pemesanan berhasil dikirim (simulasi console.log).");
+    }
+
+    // Peta
+    const map = L.map("map").setView([-6.2, 106.8], 13);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap contributors",
+    }).addTo(map);
+    const marker = L.marker([-6.2, 106.8], { draggable: true }).addTo(map);
+  </script>
+</body>
+</html>
