@@ -90,6 +90,11 @@ function kirimPemesanan() {
     return;
   }
 
+  if (!nama || !tanggalPesan || !tanggalSelesai || !alamat) {
+    alert('Silakan lengkapi semua data terlebih dahulu.');
+    return;
+  }
+
   const data = {
     nama,
     tanggalPesan,
@@ -106,9 +111,12 @@ function kirimPemesanan() {
     const namaProduk = row.cells[2].textContent;
     const harga = parseInt(row.cells[4].textContent);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const total = parseInt(jumlah) * harga;
     data.barang.push({ namaProduk, jumlah: parseInt(jumlah), harga, total });
 =======
+=======
+>>>>>>> 81882e840d20eea06eb16713aba7b8dd917a26ce
     const total = jumlah * harga;
     data.barang.push({ namaProduk, jumlah, harga, total });
 >>>>>>> 81882e840d20eea06eb16713aba7b8dd917a26ce
