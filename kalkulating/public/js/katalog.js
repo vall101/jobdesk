@@ -24,15 +24,21 @@ const subtotalHargaEl = document.getElementById("subtotalHarga");
 db.collection("produk").get().then(snapshot => {
   snapshot.forEach(doc => {
     const data = doc.data();
-    semuaProduk.push({
-      id: doc.id,
-      nama: data.namabarang,
-      kategori: data.kategori || "Lainnya",
-      harga: data.gudangList?.[0]?.harga || 0,
-      gambar: data.imageUrl?.[0] || "https://via.placeholder.com/150",
-      imageUrl: data.imageUrl || [],
-      deskripsi: data.deskripsi || ""
-    });
+    let hargaKonsumen = 0;
+const hargaGolongan = data.gudangList?.[0]?.hargaPerGolongan || [];
+const golonganKonsumen = hargaGolongan.find(h => h.golongan === "Konsumen");
+if (golonganKonsumen) hargaKonsumen = golonganKonsumen.harga;
+
+semuaProduk.push({
+  id: doc.id,
+  nama: data.namabarang,
+  kategori: data.kategori || "Lainnya",
+  harga: hargaKonsumen,
+  gambar: data.imageUrl?.[0] || "https://via.placeholder.com/150",
+  imageUrl: data.imageUrl || [],
+  deskripsi: data.deskripsi || ""
+});
+
   });
   tampilkanKategori();
   filterDanTampilkanProduk();
