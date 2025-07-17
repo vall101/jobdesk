@@ -79,7 +79,10 @@ function kirimPemesanan() {
     tanggalPesan,
     tanggalSelesai,
     alamat,
-    koordinat,
+    koordinat: {
+      lat: koordinat.lat,
+      lng: koordinat.lng
+    },
     jarak,
     barang: []
   };
@@ -106,6 +109,7 @@ function kirimPemesanan() {
       alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
     });
 }
+
 
 
 function updateTotal(input) {
