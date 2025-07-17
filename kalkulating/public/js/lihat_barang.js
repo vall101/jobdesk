@@ -91,46 +91,51 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function kirimPemesanan() {
-    const nama = document.getElementById('nama').value.trim();
-    const tanggalPesan = document.getElementById('tanggalPesan').value;
-    const tanggalSelesai = document.getElementById('tanggalSelesai').value;
-    const alamat = document.getElementById('alamat').value.trim();
+  const nama = document.getElementById('nama').value.trim();
+  const tanggalPesan = document.getElementById('tanggalPesan').value;
+  const tanggalSelesai = document.getElementById('tanggalSelesai').value;
+  const alamat = document.getElementById('alamat').value.trim();
+  const jarak = document.getElementById('jarak').value;
 
-    if (!nama || !tanggalPesan || !tanggalSelesai || !alamat) {
-      alert("Mohon lengkapi semua data pemesanan.");
-      return;
-    }
-
-    const data = {
-      nama,
-      tanggalPesan,
-      tanggalSelesai,
-      alamat,
-      koordinat,
-      barang: [],
-      waktuSubmit: new Date()
-    };
-
-    const rows = document.querySelectorAll('#tbody-barang tr');
-    rows.forEach(row => {
-      const jumlah = parseInt(row.querySelector('input[type="number"]').value);
-      const namaProduk = row.cells[2].textContent;
-      const harga = parseInt(row.cells[4].textContent);
-      const total = jumlah * harga;
-      data.barang.push({ namaProduk, jumlah, harga, total });
-    });
-
-    db.collection("pemesanan").add(data)
-      .then(() => {
-        alert("Pemesanan berhasil disimpan ke database!");
-        localStorage.removeItem("barangTerpilih");
-        window.location.href = 'pesanan.html';
-      })
-      .catch((error) => {
-        console.error("Gagal menyimpan data:", error);
-        alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
-      });
+  if (!nama || !tanggalPesan || !tanggalSelesai || !alamat) {
+    alert("Mohon lengkapi semua data pemesanan.");
+    return;
   }
+
+  const data = {
+    nama,
+    tanggalPesan,
+    tanggalSelesai,
+    alamat,
+    koordinat,
+    jarak,
+    barang: [],
+    waktuSubmit: new Date()
+  };
+
+  const rows = document.querySelectorAll('#tbody-barang tr');
+  rows.forEach(row => {
+    const jumlah = parseInt(row.querySelector('input[type="number"]').value);
+    const namaProduk = row.cells[2].textContent;
+    const harga = parseInt(row.cells[4].textContent);
+    const total = jumlah * harga;
+    data.barang.push({ namaProduk, jumlah, harga, total });
+  });
+
+  localStorage.setItem("dataPemesanan", JSON.stringify(data));
+
+  db.collection("pemesanan").add(data)
+    .then(() => {
+      alert("Pemesanan berhasil disimpan ke database!");
+      localStorage.removeItem("barangTerpilih");
+      window.location.href = 'pesanan.html';
+    })
+    .catch((error) => {
+      console.error("Gagal menyimpan data:", error);
+      alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
+    });
+}
+
 
   function updateTotal(input) {
     const row = input.closest('tr');

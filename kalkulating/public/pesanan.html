@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Detail Pesanan</title>
   <link rel="stylesheet" href="css/pesanan.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <div class="container" id="printArea">
     <h2>Detail Pesanan</h2>
 
-    <div class="data-section" id="dataPemesan">
-    </div>
+    <div class="data-section" id="dataPemesan"></div>
 
     <h3 style="margin-top: 30px;">Barang yang Dipesan</h3>
     <table>
@@ -23,8 +23,7 @@
           <th>Total Harga</th>
         </tr>
       </thead>
-      <tbody id="tabelBarang">
-      </tbody>
+      <tbody id="tabelBarang"></tbody>
       <tfoot>
         <tr class="subtotal-row">
           <td colspan="3">Subtotal</td>
@@ -36,6 +35,7 @@
     <a class="back-btn" href="lihat_barang.html">← Kembali</a>
     <a href="#" class="pdf-btn" onclick="downloadPDF()">Download PDF</a>
   </div>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
@@ -49,6 +49,7 @@
         <div class="data-row"><span class="data-label">Tanggal Selesai</span><span class="data-value">${data.tanggalSelesai}</span></div>
         <div class="data-row"><span class="data-label">Alamat</span><span class="data-value">${data.alamat}</span></div>
         <div class="data-row"><span class="data-label">Koordinat</span><span class="data-value">${data.koordinat.lat}, ${data.koordinat.lng}</span></div>
+        <div class="data-row"><span class="data-label">Jarak ke Gudang</span><span class="data-value">${data.jarak || 'Tidak diketahui'}</span></div>
       `;
 
       const tbody = document.getElementById("tabelBarang");
@@ -78,7 +79,6 @@
     function downloadPDF() {
       const { jsPDF } = window.jspdf;
       const doc = new jsPDF();
-
       doc.html(document.getElementById("printArea"), {
         callback: function (doc) {
           doc.save("detail-pesanan.pdf");
