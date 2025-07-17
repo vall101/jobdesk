@@ -1,16 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kalkulasi Barang</title>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet"/>
+
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
-      padding: 0;
+      font-family: 'Poppins', sans-serif;
       margin: 0;
+      background-color: #f8f9fa;
     }
     header, footer {
       position: sticky;
@@ -20,41 +29,60 @@
     header {
       top: 0;
       padding: 20px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     }
     footer {
       bottom: 0;
-      padding: 10px 20px;
-      border-top: 1px solid #ccc;
+      padding: 15px 20px;
+      border-top: 1px solid #ddd;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(6px);
     }
     main {
       padding: 20px;
-      padding-bottom: 80px;
+      padding-bottom: 100px;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
     }
     #searchInput {
       width: 100%;
-      padding: 10px;
+      padding: 12px;
       font-size: 16px;
-      box-sizing: border-box;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: 0.3s ease;
+    }
+    #searchInput:focus {
+      border-color: #007BFF;
     }
     #kategoriList {
       display: flex;
       overflow-x: auto;
-      gap: 10px;
-      padding: 10px 0;
+      gap: 12px;
+      padding: 15px 0 0;
     }
     .kategori-item {
-      background-color: #ddd;
-      padding: 8px 16px;
+      background-color: #e0e0e0;
+      padding: 8px 18px;
       border-radius: 20px;
       white-space: nowrap;
       cursor: pointer;
+      transition: background-color 0.3s, transform 0.2s;
+    }
+    .kategori-item:hover {
+      background-color: #d0d0d0;
     }
     .kategori-item.active {
-      background-color: #aaa;
+      background-color: #007BFF;
+      color: white;
+      font-weight: bold;
+      transform: scale(1.05);
     }
     #produkGrid {
       display: grid;
@@ -63,27 +91,65 @@
       margin-top: 20px;
     }
     .produk-card {
-      background-color: #f0f0f0;
+      background-color: #ffffff;
       padding: 10px;
-      border-radius: 8px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
       text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.3s;
+    }
+    .produk-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     }
     .produk-card img {
       width: 100%;
-      height: 150px;
+      height: 140px;
       object-fit: cover;
-      border-radius: 4px;
+      border-radius: 6px;
+      margin-bottom: 10px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
+    .produk-card h4 {
+      margin: 10px 0 5px;
+      font-size: 16px;
+      color: #333;
     }
-    table, th, td {
-      border: 1px solid black;
+    .produk-card p {
+      margin: 0 0 10px;
+      color: #777;
     }
-    th, td {
-      padding: 8px;
-      text-align: center;
+    .produk-card button {
+      background-color: #007BFF;
+      border: none;
+      color: white;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .produk-card button:hover {
+      background-color: #0056b3;
+    }
+    footer strong {
+      display: block;
+      font-weight: 600;
+      color: #333;
+    }
+    footer span {
+      color: #007BFF;
+    }
+    footer button {
+      background-color: #28a745;
+      color: white;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    footer button:hover {
+      background-color: #218838;
     }
   </style>
 </head>
@@ -106,12 +172,12 @@
 
   <script>
     const firebaseConfig = {
-       apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
-  authDomain: "official-jobdesk.firebaseapp.com",
-  projectId: "official-jobdesk",
-  storageBucket: "official-jobdesk.appspot.com",
-  messagingSenderId: "331986467875",
-  appId: "1:331986467875:web:4ed292e7ad4dd8c0f44596",
+      apiKey: "AIzaSyDXVpOaKteNhTb31idp6ZPzhW6vea8_7u0",
+      authDomain: "official-jobdesk.firebaseapp.com",
+      projectId: "official-jobdesk",
+      storageBucket: "official-jobdesk.appspot.com",
+      messagingSenderId: "331986467875",
+      appId: "1:331986467875:web:4ed292e7ad4dd8c0f44596",
     };
 
     firebase.initializeApp(firebaseConfig);
@@ -184,18 +250,15 @@
     }
 
     function tambahKePesanan(id, nama, harga) {
-  const index = produkDipilih.findIndex(p => p.id === id);
-  if (index === -1) {
-    produkDipilih.push({ id, nama, harga, jumlah: 1 });
-  } else {
-    produkDipilih[index].jumlah++;
-  }
-  updateRingkasan();
-
-  // Simpan ke localStorage agar bisa ditampilkan di lihat_barang.html
-  localStorage.setItem("barangTerpilih", JSON.stringify(produkDipilih));
-}
-
+      const index = produkDipilih.findIndex(p => p.id === id);
+      if (index === -1) {
+        produkDipilih.push({ id, nama, harga, jumlah: 1 });
+      } else {
+        produkDipilih[index].jumlah++;
+      }
+      updateRingkasan();
+      localStorage.setItem("barangTerpilih", JSON.stringify(produkDipilih));
+    }
 
     function updateRingkasan() {
       jumlahJenisEl.textContent = produkDipilih.length;
