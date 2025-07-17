@@ -67,7 +67,7 @@ function kirimPemesanan() {
   const tanggalPesan = document.getElementById('tanggalPesan').value;
   const tanggalSelesai = document.getElementById('tanggalSelesai').value;
   const alamat = document.getElementById('alamat').value;
-   const jarak = document.getElementById('jarak').value;
+  const jarak = document.getElementById('jarak').value;
 
   if (!nama || !tanggalPesan || !tanggalSelesai || !alamat) {
     alert('Silakan lengkapi semua data terlebih dahulu.');
@@ -94,8 +94,19 @@ function kirimPemesanan() {
   });
 
   localStorage.setItem('dataPemesanan', JSON.stringify(data));
-  window.location.href = 'pesanan.html';
+
+  db.collection("pemesanan").add(data)
+    .then(() => {
+      alert("Pemesanan berhasil disimpan ke database!");
+      localStorage.removeItem("barangTerpilih");
+      window.location.href = 'pesanan.html';
+    })
+    .catch((error) => {
+      console.error("Gagal menyimpan data:", error);
+      alert("Terjadi kesalahan saat menyimpan data. Silakan coba lagi.");
+    });
 }
+
 
 function updateTotal(input) {
   const row = input.closest('tr');
@@ -104,7 +115,6 @@ function updateTotal(input) {
   row.querySelector('.total-harga').textContent = jumlah * harga;
 }
 
-// Load barang dari localStorage
 const barangTerpilih = JSON.parse(localStorage.getItem('barangTerpilih') || '[]');
 const tbody = document.getElementById('tbody-barang');
 barangTerpilih.forEach(item => {
@@ -120,22 +130,28 @@ barangTerpilih.forEach(item => {
   tbody.appendChild(tr);
 });
 
-// Checkbox select all
 document.getElementById('selectAll').addEventListener('change', function () {
   const checkboxes = document.querySelectorAll('#tbody-barang input[type="checkbox"]');
   checkboxes.forEach(cb => cb.checked = this.checked);
 });
 
-// Auto set tanggal hari ini sebagai minimal
 window.onload = () => {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('tanggalPesan').min = today;
   document.getElementById('tanggalSelesai').min = today;
 };
 
-// Perbaiki focus input date
 document.querySelectorAll('input[type="date"]').forEach(input => {
   input.addEventListener('focus', function () {
     if (this.showPicker) this.showPicker();
   });
 });
+
+  document.querySelectorAll('input[type="date"]').forEach(input => {
+    input.addEventListener('click', function () {
+      if (this.showPicker) this.showPicker(); // Chrome, Edge
+    });
+    input.addEventListener('focus', function () {
+      if (this.showPicker) this.showPicker();
+    });
+  });
