@@ -6,22 +6,27 @@
   <title>Lihat Barang</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="css/lihat_barang.css" />
+   <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 </head>
 <body>
   <h2>Data Pemesan</h2>
   <div class="form-container">
-    <label for="alamat"><strong>Nama Pemesan:</strong></label>
-    <input type="text" id="nama" placeholder="Nama lengkap" />
-    <label for="alamat"><strong>Tanggal Pesan</strong></label>
+    <input type="text" id="nama" placeholder="Nama pemesan" />
     <input type="date" id="tanggalPesan" />
-    <label for="alamat"><strong>Tanggal Selesai</strong></label>
     <input type="date" id="tanggalSelesai" />
-  
+  </div>
+
+  <h3>Pilih Lokasi Pengiriman:</h3>
   <div id="map"></div>
+  <br>
   <label for="alamat"><strong>Alamat Lengkap:</strong></label>
   <input type="text" id="alamat" readonly />
   <label for="jarak"><strong>Jarak ke Gudang:</strong></label>
   <input type="text" id="jarak" readonly />
+
+</div>
+
   </div>
 
   <h2>Barang yang Dipilih</h2>
