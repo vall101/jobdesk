@@ -151,6 +151,34 @@
     footer button:hover {
       background-color: #218838;
     }
+    #popupDeskripsi {
+      display: none;
+      position: fixed;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: white;
+      padding: 20px;
+      z-index: 1000;
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      max-width: 400px;
+      border-radius: 8px;
+    }
+    #popupDeskripsi h3 {
+      margin-top: 0;
+    }
+    #popupDeskripsi button {
+      margin-top: 10px;
+      padding: 6px 10px;
+      background-color: #333;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #popupDeskripsi button:hover {
+      background-color: #000;
+    }
   </style>
 </head>
 <body>
@@ -169,6 +197,12 @@
     </div>
     <button onclick="window.location.href='lihat_barang.html'">Lihat Barang Dipesan</button>
   </footer>
+
+  <div id="popupDeskripsi">
+    <h3 id="popupNama"></h3>
+    <p id="popupDeskripsiText"></p>
+    <button onclick="document.getElementById('popupDeskripsi').style.display='none'">Tutup</button>
+  </div>
 
   <script>
     const firebaseConfig = {
@@ -202,7 +236,8 @@
           nama: data.namabarang,
           kategori: data.kategori || "Lainnya",
           harga: data.gudangList?.[0]?.harga || 0,
-          gambar: data.imageUrl?.[0] || "https://via.placeholder.com/150"
+          gambar: data.imageUrl?.[0] || "https://via.placeholder.com/150",
+          deskripsi: data.deskripsi || ""
         });
       });
       tampilkanKategori();
@@ -245,17 +280,29 @@
           <p>Rp ${p.harga.toLocaleString()}</p>
           <button onclick="tambahKePesanan('${p.id}', '${p.nama}', ${p.harga})">Tambah</button>
         `;
+
+        div.addEventListener("click", (e) => {
+          if (!e.target.matches("button")) {
+            document.getElementById("popupNama").textContent = p.nama;
+            document.getElementById("popupDeskripsiText").textContent = p.deskripsi || "Tidak ada deskripsi.";
+            document.getElementById("popupDeskripsi").style.display = "block";
+          }
+        });
+
         produkGrid.appendChild(div);
       });
     }
 
     function tambahKePesanan(id, nama, harga) {
+      const produk = semuaProduk.find(p => p.id === id);
       const index = produkDipilih.findIndex(p => p.id === id);
+
       if (index === -1) {
-        produkDipilih.push({ id, nama, harga, jumlah: 1 });
+        produkDipilih.push({ id, nama, harga, jumlah: 1, gambar: produk.gambar });
       } else {
         produkDipilih[index].jumlah++;
       }
+
       updateRingkasan();
       localStorage.setItem("barangTerpilih", JSON.stringify(produkDipilih));
     }
