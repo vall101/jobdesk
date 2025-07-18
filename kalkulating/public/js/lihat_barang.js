@@ -10,9 +10,8 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-
-let koordinat = { lat: -7.424278, lng: 109.239639 };
-const gudangLatLng = { lat: -7.426870, lng: 109.247394 };
+let koordinat = { lat:  -7.393414, lng: 109.221266 };
+const gudangLatLng = { lat:  -7.393414, lng: 109.221266 };
 let map = L.map('map').setView([koordinat.lat, koordinat.lng], 15);
 let marker = null;
 

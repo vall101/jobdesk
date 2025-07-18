@@ -32,7 +32,7 @@
       </tfoot>
     </table>
 
-    <a class="back-btn" href="lihat_barang.html">← Kembali</a>
+    <a class="back-btn" href="katalog.html">← Kembali</a>
     <a href="#" class="pdf-btn" onclick="downloadPDF()">Download PDF</a>
   </div>
 
@@ -48,7 +48,7 @@
         <div class="data-row"><span class="data-label">Tanggal Pesan</span><span class="data-value">${data.tanggalPesan}</span></div>
         <div class="data-row"><span class="data-label">Tanggal Selesai</span><span class="data-value">${data.tanggalSelesai}</span></div>
         <div class="data-row"><span class="data-label">Alamat</span><span class="data-value">${data.alamat}</span></div>
-        <div class="data-row"><span class="data-label">Koordinat</span><span class="data-value">${data.koordinat.lat}, ${data.koordinat.lng}</span></div>
+        <div class="data-row"><span class="data-label">Koordinat</span><span class="data-value">${data.koordinat.latitude}, ${data.koordinat.longitude}</span></div>
         <div class="data-row"><span class="data-label">Jarak ke Gudang</span><span class="data-value">${data.jarak || 'Tidak diketahui'}</span></div>
       `;
 
@@ -88,6 +88,10 @@
         width: 180
       });
     }
+
+    function katalog() {
+  window.location.href = "katalog.html"; // arahkan langsung ke halaman katalog
+}
   </script>
 </body>
 </html>
