@@ -90,6 +90,13 @@ function kirimPemesanan() {
     tanggalPesan,
     tanggalSelesai,
     alamat,
+<<<<<<< HEAD
+=======
+    koordinat: {
+      lat: koordinat.lat,
+      lng: koordinat.lng
+    },
+>>>>>>> 00f89a3c3fbde41107bdcdbd54b8de76a2ebe558
     jarak,
     barang: []
   };
